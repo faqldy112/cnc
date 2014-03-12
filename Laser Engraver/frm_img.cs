@@ -480,31 +480,57 @@ PixelFormat.Format8bppIndexed
 
         private void btn_engrave_Click(object sender, EventArgs e)
         {
-            ((frm_main)caller).SetTargetImage((Bitmap)pic_image.Image);
+            
 
             List<String> gcode = new List<string>();
-            gcode.Add("G00 X0.000 Y0.000\n");
+            gcode.Add("G0 X0.000 Y0.000");
             int bmpx = unzoom_image.Width;
             int bmpy = unzoom_image.Height;
+            Bitmap bmp=(Bitmap)unzoom_image;
             int pixelCount = bmpx * bmpy;
             float curr_x = 0;
             float curr_y = 0;
+            int blank = 0;
+            bool blankdisappear = false;
             for (int y = 0; y < bmpy; y++)
             {
-                int blank = 0;
-                bool blankdisappear=false;
+
+                blank = 0;
+                curr_x = 0;
                 for (int x = 0; x < bmpx; x++)
                 {
-                    if (blank > 0 && blankdisappear)
+                    curr_x = curr_x + 0.1f;
+                    
+                   
+                    float zf=bmp.GetPixel(x, y).R;
+                    if (zf == 0)
                     {
-                        gcode.Add(string.Format("G00 X{0} y{1}",curr_x+(0.1*blank),curr_y));
+                        zf = 1;
+                    }
+
+                    if (zf == 255)
+                    {
+                        blank++;
+                        blankdisappear = false;
+                    }
+                    else
+                    {
+                        blankdisappear = true;
+                        if (blank > 0 && blankdisappear)
+                        {
+                            gcode.Add(string.Format("G0 X{0} y{1}", 0.1 * blank, curr_y));
+                        }
+                        gcode.Add("M03");
+                        gcode.Add(string.Format("G1 X{0} Y{1} F{2}", (float)x / 10, (float)y / 10, zf * 4));
+                        gcode.Add("M05");
                     }
                     
                 }
                 curr_y = curr_y + 0.1f;
             }
+            ((frm_main)caller).SetTargetImage((Bitmap)pic_image.Image,gcode);
 
-            this.Close();
+           this.Close();
         }
         
     }

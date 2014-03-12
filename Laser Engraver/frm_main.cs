@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using System.Diagnostics;
+using System.IO;
 namespace Laser_Engraver
 {
     public enum eMode { CONNECTED, DISCONNECTED, RUNNING, FEEDHOLD, CYCLESTART, FINISHED, ABORTED, WAITING, READY, LOADING, SOFTRESET, INACTIVE };
-     
+
     public partial class frm_main : Form
     {
         public eMode currentMode;
@@ -20,6 +21,7 @@ namespace Laser_Engraver
         private Bitmap target_img;
         private System.Timers.Timer TXLEDoff;
         private System.Timers.Timer RXLEDoff;
+        private System.Timers.Timer PortListUpdate;
         private volatile bool waitingOnACK;
         private volatile bool cancelled;
 
@@ -29,11 +31,13 @@ namespace Laser_Engraver
         private bool statusUpdates;
         private bool useGrblOnly;
         private bool GrblReportsInches;
-
+        private bool _keepReading;
 
         private Stopwatch sw;
         private string executingLine;
         private List<string> Settings;
+
+        Thread _readThread;
 
         public delegate void TransmitLEDDelegate();
         TransmitLEDDelegate TX_LED;
@@ -54,26 +58,93 @@ namespace Laser_Engraver
         {
             InitializeComponent();
             setMode(eMode.DISCONNECTED);
-            
+
             TX_LED = new TransmitLEDDelegate(TransmitLED);
             RX_LED = new ReceiveLEDDelegate(ReceiveLED);
-            TXLEDoff = new System.Timers.Timer(10);
+            TXLEDoff = new System.Timers.Timer(50);
             TXLEDoff.Elapsed += TXLEDoffElapsed;
-            RXLEDoff = new System.Timers.Timer(10);
+            RXLEDoff = new System.Timers.Timer(50);
             RXLEDoff.Elapsed += RXLEDoffElapsed;
-
+            Settings = new List<string>();
             UpdateConsole = new UpdateConsoleDelegate(UpdateConsoleListBox);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             getSerialPortList();
-           
+
         }
         //串口连接
         //---------------------
         #region 串口方法
 
+        private void StartReading()
+        {
+            if (!_keepReading)
+            {
+                _keepReading = true;
+                _readThread = new Thread(ReadPort);
+                _readThread.Start();
+            }
+        }
+
+        private void StopReading()
+        {
+            if (_keepReading)
+            {
+                _keepReading = false;
+                _readThread.Join();	//block until exits
+                _readThread = null;
+            }
+        }
+
+        private void ReadPort()
+        {
+            while (_keepReading)
+            {
+                if (comPort.IsOpen)
+                {
+                    //Invoke(UpdateConsole, "Reading...");
+                    //byte[] readBuffer = new byte[comPort.ReadBufferSize + 1];
+                    //try
+                    //{
+                    //    // If there are bytes available on the serial port,
+                    //    // Read returns up to "count" bytes, but will not block (wait)
+                    //    // for the remaining bytes. If there are no bytes available
+                    //    // on the serial port, Read will block until at least one byte
+                    //    // is available on the port, up until the ReadTimeout milliseconds
+                    //    // have elapsed, at which time a TimeoutException will be thrown.
+                    //    int count = comPort.Read(readBuffer, 0, comPort.ReadBufferSize);
+                    //    String SerialIn = System.Text.Encoding.ASCII.GetString(readBuffer, 0, count);
+                    try
+                    {
+
+                        while (comPort.BytesToRead > 0)
+                        {
+                            string SerialIn = comPort.ReadLine();
+                            Invoke(UpdateConsole, SerialIn);
+                            Invoke(RX_LED);
+                        }
+                    }
+                    catch (TimeoutException) { }
+                }
+                else
+                {
+                    TimeSpan waitTime = new TimeSpan(0, 0, 0, 0, 50);
+                    Thread.Sleep(waitTime);
+                }
+            }
+        }
+
+        public void Send(string data)
+        {
+            if (comPort.IsOpen)
+            {
+                Thread.Sleep(50);
+                Invoke(TX_LED);
+                comPort.Write(data + "\n");
+            }
+        }
         /// <summary>
         /// 获取串口列表
         /// </summary>
@@ -87,6 +158,7 @@ namespace Laser_Engraver
             }
             // choose first available index
             comList.SelectedIndex = 0;
+
         }
         private void connect()
         {
@@ -114,28 +186,42 @@ namespace Laser_Engraver
             {
                 // open port, prod for a reponse within 500 ms
                 comPort.Open();
-                comPort.ReadTimeout = 500;
-                comPort.Write("\n");
-                //setMode(eMode.CONNECTED);
-                comPort.ReadTimeout = -1;
-
+                StartReading();
+                comPort.ReadTimeout = 1000;
+                Send(" ");
+                setMode(eMode.CONNECTED);
+                //comPort.ReadTimeout = -1;
+                
             }
-            catch (Exception ex)
+
+            catch (IOException)
             {
-                MessageBox.Show(ex.Message,
+                setMode(eMode.DISCONNECTED);
+                MessageBox.Show(String.Format("{0} does not exist", comPort.PortName),
                                 "Serial Port",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error,
                                 MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                //setMode(eMode.DISCONNECTED);
+
+
             }
+            catch (UnauthorizedAccessException)
+            {
+                setMode(eMode.DISCONNECTED);
+                MessageBox.Show(String.Format("{0} already in use", comPort.PortName),
+                               "Serial Port",
+                               MessageBoxButtons.OK, MessageBoxIcon.Error,
+                               MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+            }
+
         }
 
         private void disconnect()
         {
-        
+
             comPort.Close();
             setMode(eMode.DISCONNECTED);
-    
+
         }
         private void clearSerialBuffers()
         {
@@ -161,7 +247,7 @@ namespace Laser_Engraver
             // delay for bootloader timeout
             for (int i = 3; i > 0; i--)
             {
-                lb_connectStatu.Text=
+                lb_connectStatu.Text =
                     string.Format("等待重启 ...{0}秒", i);
                 Application.DoEvents();
                 Thread.Sleep(1000);
@@ -191,6 +277,7 @@ namespace Laser_Engraver
 
                     // test cases for responses back from GRbl
                     Invoke(UpdateConsole, ACK);
+
                     // normal response
                     if (ACK.ToUpper().Trim() == "OK")
                     {
@@ -472,16 +559,19 @@ namespace Laser_Engraver
             RXLEDoff.Enabled = false;
             lb_RX.BackColor = System.Drawing.Color.DarkGray;
         }
+
         #endregion
         private void UpdateConsoleListBox(string str)
         {
-            listBox1.Items.Add(str);
+            if (!str.ToUpper().Contains("OK"))
+                listBox1.Items.Add(str);
+            this.listBox1.TopIndex = this.listBox1.Items.Count - (int)(this.listBox1.Height / this.listBox1.ItemHeight);
         }
         private void button1_Click(object sender, EventArgs e)
         {
             DialogResult result = imgFileDialog.ShowDialog();
             {
-                if (result ==DialogResult.OK)
+                if (result == DialogResult.OK)
                 {
                     tb_filename.Text = imgFileDialog.FileName;
                     Bitmap bmp = new Bitmap(imgFileDialog.FileName);
@@ -523,28 +613,13 @@ namespace Laser_Engraver
             }
             else
             {
+                setMode(eMode.DISCONNECTED);
+                disconnect();
             }
         }
 
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox3_Enter(object sender, EventArgs e)
-        {
-
-        }
+       
+     
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
@@ -556,13 +631,80 @@ namespace Laser_Engraver
             lb_laserpower.Text = track_LaserPower.Value.ToString();
         }
 
-        private void label12_Click(object sender, EventArgs e)
-        {
-
-        }
-        public void SetTargetImage(Bitmap bmp)
+       
+        public void SetTargetImage(Bitmap bmp,List<string> gcode)
         {
             target_img = bmp;
+            pictureBox1.Image = bmp;
+            foreach (string gc in gcode)
+            {
+                listBox2.Items.Add(gc);
+            }
+            
+        }
+
+        private void comboBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                Send(comboBox1.Text);
+                Invoke(UpdateConsole, ">_ " + comboBox1.Text);
+                comboBox1.Text = "";
+            }
+        }
+
+        private void frm_main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            StopReading();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                Send("M03\r");
+            }
+            else
+            {
+                Send("M05\r");
+            }
+        }
+
+        private void comList_DropDown(object sender, EventArgs e)
+        {
+            getSerialPortList();
+        }
+
+        private void btn_output_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sf = new SaveFileDialog();
+            //设置文件保存类型
+            sf.Filter = "nc文件|*.nc|所有文件|*.*";
+            //如果用户没有输入扩展名，自动追加后缀
+            sf.AddExtension = true;
+            //设置标题
+            sf.Title = "保存Gcode";
+            //如果用户点击了保存按钮
+            if (sf.ShowDialog() == DialogResult.OK)
+            {
+                //实例化一个文件流--->与写入文件相关联
+                FileStream fs = new FileStream(sf.FileName, FileMode.Create);
+                //获得字节数组
+                byte[] data ;
+                int offset=0;
+                for( int i=0;i<listBox2.Items.Count;i++)
+                {
+                    data = new UTF8Encoding().GetBytes(listBox2.Items[i].ToString()+"\n");
+                    fs.Write(data, 0, data.Length);
+                    
+                }
+                //开始写入
+                
+                //清空缓冲区、关闭流
+                fs.Flush();
+                fs.Close();
+
+            }
         }
     }
 }

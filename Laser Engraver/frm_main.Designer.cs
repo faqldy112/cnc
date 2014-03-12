@@ -33,8 +33,8 @@
             this.btn_browse = new System.Windows.Forms.Button();
             this.imgFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.lb_TX = new System.Windows.Forms.ToolStripStatusLabel();
             this.lb_RX = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lb_TX = new System.Windows.Forms.ToolStripStatusLabel();
             this.lb_connectStatu = new System.Windows.Forms.ToolStripStatusLabel();
             this.comList = new System.Windows.Forms.ComboBox();
             this.btn_connect = new System.Windows.Forms.Button();
@@ -63,6 +63,7 @@
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
             this.btn_setZeroY = new System.Windows.Forms.Button();
+            this.dip_Y = new DmitryBrant.CustomControls.SevenSegmentArray();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btn_home = new System.Windows.Forms.Button();
             this.btn_setZeroAll = new System.Windows.Forms.Button();
@@ -71,10 +72,23 @@
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.label3 = new System.Windows.Forms.Label();
             this.btn_setZeroX = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.dip_Y = new DmitryBrant.CustomControls.SevenSegmentArray();
             this.dip_X = new DmitryBrant.CustomControls.SevenSegmentArray();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.listBox2 = new System.Windows.Forms.ListBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.btn_output = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -93,6 +107,11 @@
             this.flowLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // tb_filename
@@ -119,24 +138,14 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lb_TX,
             this.lb_RX,
+            this.lb_TX,
             this.lb_connectStatu});
-            this.statusStrip1.Location = new System.Drawing.Point(15, 530);
+            this.statusStrip1.Location = new System.Drawing.Point(15, 535);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(754, 26);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
-            // 
-            // lb_TX
-            // 
-            this.lb_TX.BackColor = System.Drawing.Color.DarkGray;
-            this.lb_TX.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
-            this.lb_TX.Name = "lb_TX";
-            this.lb_TX.Size = new System.Drawing.Size(27, 21);
-            this.lb_TX.Text = "TX";
             // 
             // lb_RX
             // 
@@ -148,6 +157,16 @@
             this.lb_RX.Size = new System.Drawing.Size(28, 21);
             this.lb_RX.Text = "RX";
             // 
+            // lb_TX
+            // 
+            this.lb_TX.BackColor = System.Drawing.Color.DarkGray;
+            this.lb_TX.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.lb_TX.Name = "lb_TX";
+            this.lb_TX.Size = new System.Drawing.Size(27, 21);
+            this.lb_TX.Text = "TX";
+            // 
             // lb_connectStatu
             // 
             this.lb_connectStatu.Name = "lb_connectStatu";
@@ -157,24 +176,21 @@
             // comList
             // 
             this.comList.FormattingEnabled = true;
-            this.comList.Location = new System.Drawing.Point(110, 537);
+            this.comList.Location = new System.Drawing.Point(535, 538);
             this.comList.Name = "comList";
             this.comList.Size = new System.Drawing.Size(121, 20);
             this.comList.TabIndex = 4;
+            this.comList.DropDown += new System.EventHandler(this.comList_DropDown);
             // 
             // btn_connect
             // 
-            this.btn_connect.Location = new System.Drawing.Point(234, 536);
+            this.btn_connect.Location = new System.Drawing.Point(659, 537);
             this.btn_connect.Name = "btn_connect";
             this.btn_connect.Size = new System.Drawing.Size(75, 21);
             this.btn_connect.TabIndex = 5;
             this.btn_connect.Text = "连接";
             this.btn_connect.UseVisualStyleBackColor = true;
             this.btn_connect.Click += new System.EventHandler(this.btn_connect_Click);
-            // 
-            // comPort
-            // 
-            this.comPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.ComPortDataReceived);
             // 
             // splitContainer1
             // 
@@ -189,10 +205,11 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
             this.splitContainer1.Panel2.Controls.Add(this.listBox1);
             this.splitContainer1.Panel2.Controls.Add(this.comboBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(754, 510);
-            this.splitContainer1.SplitterDistance = 264;
+            this.splitContainer1.Size = new System.Drawing.Size(754, 515);
+            this.splitContainer1.SplitterDistance = 266;
             this.splitContainer1.TabIndex = 6;
             // 
             // splitContainer2
@@ -209,7 +226,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer2.Size = new System.Drawing.Size(754, 264);
+            this.splitContainer2.Size = new System.Drawing.Size(754, 266);
             this.splitContainer2.SplitterDistance = 493;
             this.splitContainer2.TabIndex = 3;
             // 
@@ -226,11 +243,10 @@
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(0, 150);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(493, 114);
+            this.groupBox3.Size = new System.Drawing.Size(493, 116);
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "雕刻机控制";
-            this.groupBox3.Enter += new System.EventHandler(this.groupBox3_Enter);
             // 
             // track_laserSpeed
             // 
@@ -260,7 +276,6 @@
             this.label12.Size = new System.Drawing.Size(11, 12);
             this.label12.TabIndex = 6;
             this.label12.Text = "%";
-            this.label12.Click += new System.EventHandler(this.label12_Click);
             // 
             // label10
             // 
@@ -396,7 +411,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(257, 264);
+            this.groupBox1.Size = new System.Drawing.Size(257, 266);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "显示面板";
@@ -419,18 +434,17 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(251, 244);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(251, 246);
             this.tableLayoutPanel1.TabIndex = 0;
-            this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
             // 
             // flowLayoutPanel3
             // 
             this.flowLayoutPanel3.Controls.Add(this.label4);
             this.flowLayoutPanel3.Controls.Add(this.btn_setZeroY);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(6, 89);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(6, 90);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(55, 77);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(55, 78);
             this.flowLayoutPanel3.TabIndex = 6;
             // 
             // label4
@@ -453,6 +467,23 @@
             this.btn_setZeroY.Text = "清零";
             this.btn_setZeroY.UseVisualStyleBackColor = true;
             // 
+            // dip_Y
+            // 
+            this.dip_Y.ArrayCount = 6;
+            this.dip_Y.ColorBackground = System.Drawing.Color.Silver;
+            this.dip_Y.ColorDark = System.Drawing.Color.Silver;
+            this.dip_Y.ColorLight = System.Drawing.Color.Black;
+            this.dip_Y.DecimalShow = true;
+            this.dip_Y.ElementPadding = new System.Windows.Forms.Padding(4);
+            this.dip_Y.ElementWidth = 10;
+            this.dip_Y.ItalicFactor = 0F;
+            this.dip_Y.Location = new System.Drawing.Point(67, 90);
+            this.dip_Y.Name = "dip_Y";
+            this.dip_Y.Size = new System.Drawing.Size(178, 64);
+            this.dip_Y.TabIndex = 1;
+            this.dip_Y.TabStop = false;
+            this.dip_Y.Value = "000.000";
+            // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.btn_home);
@@ -460,7 +491,7 @@
             this.flowLayoutPanel1.Controls.Add(this.radioButton1);
             this.flowLayoutPanel1.Controls.Add(this.radioButton2);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(67, 172);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(67, 174);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(178, 66);
             this.flowLayoutPanel1.TabIndex = 4;
@@ -523,7 +554,6 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "X轴";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // btn_setZeroX
             // 
@@ -534,42 +564,6 @@
             this.btn_setZeroX.TabIndex = 1;
             this.btn_setZeroX.Text = "清零";
             this.btn_setZeroX.UseVisualStyleBackColor = true;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(0, 222);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(754, 20);
-            this.comboBox1.TabIndex = 0;
-            // 
-            // listBox1
-            // 
-            this.listBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(0, 0);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(754, 220);
-            this.listBox1.TabIndex = 1;
-            // 
-            // dip_Y
-            // 
-            this.dip_Y.ArrayCount = 6;
-            this.dip_Y.ColorBackground = System.Drawing.Color.Silver;
-            this.dip_Y.ColorDark = System.Drawing.Color.Silver;
-            this.dip_Y.ColorLight = System.Drawing.Color.Black;
-            this.dip_Y.DecimalShow = true;
-            this.dip_Y.ElementPadding = new System.Windows.Forms.Padding(4);
-            this.dip_Y.ElementWidth = 10;
-            this.dip_Y.ItalicFactor = 0F;
-            this.dip_Y.Location = new System.Drawing.Point(67, 89);
-            this.dip_Y.Name = "dip_Y";
-            this.dip_Y.Size = new System.Drawing.Size(178, 64);
-            this.dip_Y.TabIndex = 1;
-            this.dip_Y.TabStop = false;
-            this.dip_Y.Value = "000.000";
             // 
             // dip_X
             // 
@@ -588,6 +582,177 @@
             this.dip_X.TabStop = false;
             this.dip_X.Value = "000.000";
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.tabControl1.Location = new System.Drawing.Point(503, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(251, 225);
+            this.tabControl1.TabIndex = 2;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.checkBox1);
+            this.tabPage1.Controls.Add(this.label9);
+            this.tabPage1.Controls.Add(this.comboBox2);
+            this.tabPage1.Controls.Add(this.button6);
+            this.tabPage1.Controls.Add(this.button5);
+            this.tabPage1.Controls.Add(this.button4);
+            this.tabPage1.Controls.Add(this.button3);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(243, 199);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "坐标控制板";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(16, 94);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(72, 16);
+            this.checkBox1.TabIndex = 7;
+            this.checkBox1.Text = "打开激光";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(142, 6);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(35, 12);
+            this.label9.TabIndex = 5;
+            this.label9.Text = "Step:";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "0.01",
+            "0.1",
+            "1",
+            "10",
+            "100"});
+            this.comboBox2.Location = new System.Drawing.Point(143, 24);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(77, 20);
+            this.comboBox2.TabIndex = 4;
+            this.comboBox2.Text = "1";
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(78, 50);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(56, 38);
+            this.button6.TabIndex = 3;
+            this.button6.Text = "Y -";
+            this.button6.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(140, 50);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(56, 38);
+            this.button5.TabIndex = 2;
+            this.button5.Text = "X +";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(16, 50);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(56, 38);
+            this.button4.TabIndex = 1;
+            this.button4.Text = "X -";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(78, 6);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(56, 38);
+            this.button3.TabIndex = 0;
+            this.button3.Text = "Y +";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.btn_output);
+            this.tabPage2.Controls.Add(this.listBox2);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(243, 199);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "G_Code";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // listBox2
+            // 
+            this.listBox2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.listBox2.FormattingEnabled = true;
+            this.listBox2.ItemHeight = 12;
+            this.listBox2.Location = new System.Drawing.Point(3, 3);
+            this.listBox2.Name = "listBox2";
+            this.listBox2.Size = new System.Drawing.Size(237, 160);
+            this.listBox2.TabIndex = 0;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.pictureBox1);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(243, 199);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "图片";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(243, 199);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
+            // listBox1
+            // 
+            this.listBox1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 12;
+            this.listBox1.Location = new System.Drawing.Point(0, 0);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(493, 225);
+            this.listBox1.TabIndex = 1;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(0, 225);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(754, 20);
+            this.comboBox1.TabIndex = 0;
+            this.comboBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBox1_KeyPress);
+            // 
+            // btn_output
+            // 
+            this.btn_output.Location = new System.Drawing.Point(6, 170);
+            this.btn_output.Name = "btn_output";
+            this.btn_output.Size = new System.Drawing.Size(75, 23);
+            this.btn_output.TabIndex = 1;
+            this.btn_output.Text = "导出";
+            this.btn_output.UseVisualStyleBackColor = true;
+            this.btn_output.Click += new System.EventHandler(this.btn_output_Click);
+            // 
             // frm_main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -601,8 +766,9 @@
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "frm_main";
-            this.Padding = new System.Windows.Forms.Padding(15, 20, 15, 5);
+            this.Padding = new System.Windows.Forms.Padding(15, 20, 15, 0);
             this.Text = "Laser Engraver ver 0.1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm_main_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.frm_main_Resize);
             this.statusStrip1.ResumeLayout(false);
@@ -627,6 +793,12 @@
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -637,7 +809,6 @@
         private System.Windows.Forms.TextBox tb_filename;
         private System.Windows.Forms.Button btn_browse;
         private System.Windows.Forms.OpenFileDialog imgFileDialog;
-        private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel lb_connectStatu;
         private System.Windows.Forms.ComboBox comList;
         private System.Windows.Forms.Button btn_connect;
@@ -680,6 +851,21 @@
         private System.Windows.Forms.TrackBar track_laserSpeed;
         private System.Windows.Forms.ComboBox comboBox1;
         private volatile System.Windows.Forms.ListBox listBox1;
+        internal System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.ListBox listBox2;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Button btn_output;
     }
 }
 
