@@ -563,7 +563,7 @@ namespace Laser_Engraver
         #endregion
         private void UpdateConsoleListBox(string str)
         {
-            if (!str.ToUpper().Contains("OK"))
+            //if (!str.ToUpper().Contains("OK"))
                 listBox1.Items.Add(str);
             this.listBox1.TopIndex = this.listBox1.Items.Count - (int)(this.listBox1.Height / this.listBox1.ItemHeight);
         }

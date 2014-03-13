@@ -483,13 +483,14 @@ PixelFormat.Format8bppIndexed
             
 
             List<String> gcode = new List<string>();
-            gcode.Add("G0 X0.000 Y0.000");
+            
             int bmpx = unzoom_image.Width;
             int bmpy = unzoom_image.Height;
             Bitmap bmp=(Bitmap)unzoom_image;
             int pixelCount = bmpx * bmpy;
             float curr_x = 0;
             float curr_y = 0;
+            float zf=0;
             int blank = 0;
             bool blankdisappear = false;
             for (int y = 0; y < bmpy; y++)
@@ -497,12 +498,15 @@ PixelFormat.Format8bppIndexed
 
                 blank = 0;
                 curr_x = 0;
+                zf = bmp.GetPixel(0, y).R;
+                if(zf!=255)
+                    gcode.Add(string.Format("G0 X0 Y{0}",  curr_y));
                 for (int x = 0; x < bmpx; x++)
                 {
                     curr_x = curr_x + 0.1f;
                     
                    
-                    float zf=bmp.GetPixel(x, y).R;
+                    zf=bmp.GetPixel(x, y).R;
                     if (zf == 0)
                     {
                         zf = 1;
@@ -518,11 +522,12 @@ PixelFormat.Format8bppIndexed
                         blankdisappear = true;
                         if (blank > 0 && blankdisappear)
                         {
-                            gcode.Add(string.Format("G0 X{0} y{1}", 0.1 * blank, curr_y));
+                            gcode.Add(string.Format("G0 X{0} Y{1}", 0.1*x, curr_y));
                         }
-                        gcode.Add("M03");
-                        gcode.Add(string.Format("G1 X{0} Y{1} F{2}", (float)x / 10, (float)y / 10, zf * 4));
-                        gcode.Add("M05");
+                        gcode.Add("M3");
+                        gcode.Add(string.Format("G1 X{0} Y{1} F{2}", (float)x / 10, (float)y / 10, zf * 40));
+                        gcode.Add("M5");
+                        blank = 0;
                     }
                     
                 }
